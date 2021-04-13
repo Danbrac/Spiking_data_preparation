@@ -2,6 +2,7 @@ from scipy import signal
 from numba import jit, float64, int8
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
 class BSAEncoder:
 
@@ -64,8 +65,7 @@ class BSAEncoder:
 
     @filter_amp.setter
     def filter_amp(self, new_amp):
-        assert isinstance(new_amp, (int, float)), "'filter_amp' must be of\
-         types [int, float]"
+        assert isinstance(new_amp, (int, float)), "'filter_amp' must be of types [int, float]"
         self._filter_amp = new_amp
         self.filter_response = self.filter_response * new_amp
         return
@@ -76,8 +76,7 @@ class BSAEncoder:
 
     @threshold.setter
     def threshold(self, new_threshold):
-        assert isinstance(new_threshold, (float, int)), "'threshold' should be\
-         of type 'float' or 'int'."
+        assert isinstance(new_threshold, (float, int)), "'threshold' should be of type 'float' or 'int'."
         self._threshold = new_threshold
 
     def encode(self, sgnl):
@@ -93,8 +92,7 @@ class BSAEncoder:
          numba.jit decorator.
         """
 
-        @jit(int8[:](float64[:], float64[:], int8, float64),
-             nopython=True, cache=True)
+        @jit(int8[:](float64[:], float64[:], int8, float64), nopython=True, cache=True)
         def calc_spike_times(sig, filter_response, step, threshold):
             filter_size = filter_response.shape[0]
             sgnl_size = sig.shape[0]
